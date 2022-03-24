@@ -1,0 +1,40 @@
+#!/bin/bash
+SERVER="172.31.x.x"
+SERVER2="172.31.x.x"
+EXAMPLE_COM="i-01ec02647bab11.x.x"
+EXAMPLE2_COM="i-0b07385c594f8cx.x"
+
+## Getting server instance ID 
+if [[ $domain == "example.com" ]]; then
+    ID=$EXAMPLE_COM;
+    IP=$SERVER;
+elif [[ $domain == "example2.com" ]]; then
+    ID=$EXAMPLE2_COM;
+    IP=$SERVER2;
+else
+    ID="";
+fi
+##
+
+## Starting server with instance ID 
+if [[ $ID == "" ]]; then
+    echo "No server found"
+    exit 1
+else
+    echo "Server instance id :: $ID"
+    aws ec2 start-instances --instance-ids $ID --region ap-south-1
+    echo "server started"
+fi
+##
+
+
+## Checking server Connectivity. 
+if [[ $IP == "" ]]; then
+    echo "No server found"
+    exit 1
+else
+    echo "Server instance IP :: $IP"
+	nc -vz $IP 22
+    echo "echo Connection successful..!!"
+fi
+##
